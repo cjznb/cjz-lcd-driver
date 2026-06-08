@@ -1,0 +1,28 @@
+# Build output
+build/
+out/
+Debug/
+Release/
+*.o
+*.obj
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+
+# OS files
+*.bak
+*.tmp
