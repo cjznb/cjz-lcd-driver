@@ -57,17 +57,15 @@ static const uint8_t _st7789_data_C2[] = {0x01, 0xFF};
 static const uint8_t _st7789_data_E0[] = {0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23};
 static const uint8_t _st7789_data_E1[] = {0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23};
 
-#if LCD_COLOR_INVERSION
-static const lcd_init_step_t _st7789_inv = { ST7789_INVON,  0, NULL, 0 };
-#else
-static const lcd_init_step_t _st7789_inv = { ST7789_INVOFF, 0, NULL, 0 };
-#endif
-
 static const lcd_init_step_t lcd_init_seq[] = {
     { ST7789_SLPOUT,    0, NULL,                          120 },   /* 退出睡眠 */
     { ST7789_MADCTL,    1, (uint8_t[]){LCD_MADCTL_VAL},   0   },   /* 显示方向 */
     { ST7789_COLMOD,    1, (uint8_t[]){0x55},             10  },   /* RGB565 像素格式 */
-    _st7789_inv,                                                  /* 颜色反转 */
+#if LCD_COLOR_INVERSION
+    { ST7789_INVON,     0, NULL,                          0   },   /* 颜色反转：开 */
+#else
+    { ST7789_INVOFF,    0, NULL,                          0   },   /* 颜色反转：关 */
+#endif
     { ST7789_PORCTRL,   5, _st7789_data_B2,               0   },   /* Porch 时序 */
     { ST7789_GCTRL,     1, (uint8_t[]){0x35},             0   },   /* Gate 控制 */
     { ST7789_VCOMS,     1, (uint8_t[]){0x19},             0   },   /* VCOM 设置 */
