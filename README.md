@@ -272,7 +272,6 @@ cjz-lcd-driver/
 │   ├── lcd_buffer.c             # Buffer management (create/destroy/send/moveable)
 │   ├── lcd_buffer_draw.c        # Buffer drawing (shapes, fonts, images)
 │   ├── font.c                   # 6x8 ASCII font + 16x16 Chinese font example
-│   └── cat_pic.c                # 128x96 sample RGB565 image
 ├── LICENSE                       # MIT
 ├── README.md                     # This file
 └── README_CN.md                  # Chinese version

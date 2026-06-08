@@ -275,7 +275,6 @@ cjz-lcd-driver/
 │   ├── lcd_buffer.c             # 缓冲区管理（创建/销毁/提交/可移动）
 │   ├── lcd_buffer_draw.c        # 缓冲区绘图（几何图形、字体、图像）
 │   ├── font.c                   # 6×8 ASCII 字体 + 16×16 汉字示例
-│   └── cat_pic.c                # 128×96 RGB565 猫咪示例图片
 ├── LICENSE                       # MIT 开源协议
 ├── README.md                     # 英文说明文档
 └── README_CN.md                  # 中文说明文档（本文件）
