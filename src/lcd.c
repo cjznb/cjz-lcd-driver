@@ -9,6 +9,7 @@
  */
 
 #include "lcd.h"
+#include "lcd_init_seq.h"
 #include <stdint.h>
 #include <string.h>
 
@@ -115,48 +116,6 @@ typedef struct {
 
 #define LCD_DELAY_FLAG  0xFF
 
-typedef struct {
-    uint8_t cmd;
-    uint8_t data_len;
-    const uint8_t *data;
-    uint16_t delay;
-} LCD_Init_Sequence_t;
-
-static const uint8_t data_B2[] = {0x0C, 0x0C, 0x00, 0x33, 0x33};
-static const uint8_t data_C2[] = {0x01, 0xFF};
-static const uint8_t data_E0[] = {0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23};
-static const uint8_t data_E1[] = {0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23};
-
-#if LCD_COLOR_INVERSION
-static const LCD_Init_Sequence_t inversion_cmd = { 0x21, 0, NULL, 0 };
-#else
-static const LCD_Init_Sequence_t inversion_cmd = { 0x20, 0, NULL, 0 };
-#endif
-
-#define LCD_MADCTL_VAL ( \
-    (LCD_HORIZONTAL_FLIP ? MADCTL_MX : 0) | \
-    (LCD_VERTICAL_FLIP   ? MADCTL_MY : 0) | \
-    (LCD_SWAP_RGB        ? MADCTL_BGR : 0) \
-)
-
-static const LCD_Init_Sequence_t st7789_init_seq[] = {
-    {0x11, 0, NULL, 120},
-    {0x36, 1, (uint8_t[]){LCD_MADCTL_VAL}, 0},
-    {0x3A, 1, (uint8_t[]){0x55}, 10},
-    inversion_cmd,
-    {0xB2, 5, data_B2, 0},
-    {0xB7, 1, (uint8_t[]){0x35}, 0},
-    {0xBB, 1, (uint8_t[]){0x19}, 0},
-    {0xC0, 1, (uint8_t[]){0x2C}, 0},
-    {0xC2, 2, data_C2, 0},
-    {0xC3, 1, (uint8_t[]){0x12}, 0},
-    {0xC4, 1, (uint8_t[]){0x20}, 0},
-    {0xC6, 1, (uint8_t[]){0x0F}, 0},
-    {0xE0, 14, data_E0, 0},
-    {0xE1, 14, data_E1, 0},
-    {0x29, 0, NULL, 100},
-};
-
 #if LCD_USE_SPI
 static void LCD_Set_DC_CS(void* arg) {
     LCD_PinState_t *state = (LCD_PinState_t*)arg;
@@ -235,9 +194,9 @@ void LCD_Init(LCD_HW_Interface_t* hw)
     local_heap_offset += sizeof(LCD_RuntimeData_t);
 
     LCD_Reset(hw);
-    uint8_t seq_count = sizeof(st7789_init_seq) / sizeof(LCD_Init_Sequence_t);
+    uint8_t seq_count = LCD_INIT_SEQ_COUNT;
     for (uint8_t i = 0; i < seq_count; i++) {
-        const LCD_Init_Sequence_t* step = &st7789_init_seq[i];
+        const lcd_init_step_t* step = &lcd_init_seq[i];
         LCD_WriteReg(hw, step->cmd, step->data, step->data_len);
         if (step->delay > 0) {
             hw->delay_ms(step->delay);

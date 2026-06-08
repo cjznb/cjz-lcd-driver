@@ -287,7 +287,7 @@ A: All of them. The core driver has zero platform dependencies. You only need to
 A: Yes. The library is blocking/synchronous. Run it in a dedicated task or wrap calls with your RTOS primitives.
 
 **Q: How do I add support for a different LCD controller?**
-A: Replace the `st7789_init_seq[]` table in `lcd.c` with your controller's init sequence. Optionally, add a new `xxx_cmd.h` header for its register definitions.
+A: Add a new `#elif defined(LCD_DRIVER_CHIP_XXX)` block in `inc/lcd_init_seq.h` with your controller's init sequence, then select the chip in `inc/lcd_user_config.h`. Optionally add a new register definition header (e.g. `inc/st7735_cmd.h`).
 
 **Q: Why is `lcd_implement_template.c` not "clean" C?**
 A: It is intentionally a template — the function bodies are empty stubs with detailed Chinese documentation. This makes the porting requirements immediately obvious.
